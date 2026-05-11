@@ -223,8 +223,6 @@ class MathIAs extends HTMLElement {
   _addMessage(type, text) {
     if (!text) return;
 
-    console.log('[MathIAs] _addMessage:', type, text);
-
     this._messages.push({ type, text, timestamp: new Date().toISOString() });
     this._saveMessages();
 
@@ -233,15 +231,12 @@ class MathIAs extends HTMLElement {
     }
 
     const messageEl = this._createMessageElement(type, text);
-    console.log('[MathIAs] Created element:', messageEl.innerHTML);
     this._messagesContainer.appendChild(messageEl);
 
     if (type !== 'user') {
       const bubbleText = messageEl.querySelector('.bubble-text');
-      console.log('[MathIAs] bubbleText before render:', bubbleText.innerHTML);
       if (bubbleText) {
         this._renderMathInElement(bubbleText);
-        console.log('[MathIAs] bubbleText after render:', bubbleText.innerHTML);
       }
     }
 
