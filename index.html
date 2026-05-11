@@ -9,92 +9,36 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="mathias.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
       font-family: "Nunito", "Segoe UI", sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      margin: 0;
       padding: 20px;
     }
-
     h1 {
       color: white;
+      text-align: center;
       margin-bottom: 24px;
       font-weight: 700;
       font-size: 28px;
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      padding: 24px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-      max-width: 700px;
-      width: 100%;
-    }
-
-    .reset-btn {
-      background: rgba(255, 255, 255, 0.2);
-      border: 2px solid rgba(255, 255, 255, 0.5);
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .reset-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.1);
-    }
-
-    .reset-btn span {
-      font-size: 24px;
+    p {
+      color: rgba(255, 255, 255, 0.8);
+      text-align: center;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
   <h1>🍎 MathIAs - Asistente de Matemáticas 🎓</h1>
+  <p>El widget flotante aparece en la esquina inferior derecha. ¡Haz clic en la manzana para comenzar!</p>
 
-  <div class="container">
-    <mathias-asistente id="mathias1"
-      webhook-url="http://localhost:3001/api/chat"></mathias-asistente>
-
-    <button class="reset-btn" id="resetBtn">
-      <span>🔄</span>
-      Reiniciar
-    </button>
-  </div>
+  <mathias-asistente webhook-url="http://localhost:3001/api/chat"></mathias-asistente>
 
   <script src="mathias.js"></script>
-  <script>
-    document.getElementById('resetBtn').addEventListener('click', function() {
-      var mathias = document.getElementById('mathias1');
-      if (mathias && typeof mathias.reset === 'function') {
-        mathias.reset();
-      }
-    });
-  </script>
 </body>
 </html>
