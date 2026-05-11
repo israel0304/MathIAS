@@ -79,11 +79,44 @@ curl http://localhost:3001/health
 MathIAS/
 ├── index.html      # Página principal con el componente MathIAs
 ├── mathias.js      # Web Component (frontend)
+├── mathias.css     # Estilos del widget flotante
 ├── server.js       # Servidor Node.js/Express (backend)
 ├── package.json    # Dependencias de Node.js
 ├── .env            # Variables de entorno
 ├── ESQUEMA.md      # Documentación de la API
 └── README.md       # Este archivo
+```
+
+## Widget Flotante
+
+A partir de la versión 2.0, MathIAs funciona como un **widget flotante** redimensionable:
+
+- **Botón flotante** 🍎 - Esquina inferior derecha de la página
+- **Ventana de chat** - Se abre al hacer clic en el botón
+- **Redimensionable** - Arrastra la esquina inferior derecha
+  - Tamaño mínimo: 350x450 px
+  - Tamaño máximo: 700x650 px
+  - Tamaño por defecto: 450x550 px
+- **Persistencia** - El tamaño y los mensajes se guardan en localStorage
+- **Reutilizable** - Puede integrarse en cualquier sitio web con solo agregar la etiqueta `<mathias-asistente></mathias-asistente>`
+
+### Uso en cualquier sitio web
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="mathias.css">
+  <script src="mathias.js"></script>
+</head>
+<body>
+  <h1>Mi Sitio Web</h1>
+  
+  <!-- El widget aparece en la esquina inferior derecha -->
+  <mathias-asistente webhook-url="http://mi-servidor.com/api/chat">
+  </mathias-asistente>
+</body>
+</html>
 ```
 
 ## Configuración avanzada

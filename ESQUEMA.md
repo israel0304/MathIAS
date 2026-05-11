@@ -106,7 +106,31 @@ _setState(newState) {
 
 ## Notas de Implementación
 
-- El componente usa Shadow DOM para aislamiento de estilos
-- Los colores siguen la paleta de Windows 98 (#c0c0c0, #000080)
+- **Widget Flotante** - El componente ahora es un widget flotante en la esquina inferior derecha
+- **CSS Separado** - Los estilos están en `mathias.css` (no usa Shadow DOM)
+- **Reutilizable** - Puede integrarse en cualquier sitio web
+- **Persistencia** - Mensajes y tamaño de ventana se guardan en localStorage
 - El webhook debe estar en el mismo dominio o tener CORS configurado
 - Para producción, usar HTTPS y API Key en headers
+
+## Estructura del Widget
+
+```
+.mathias-widget (position: fixed; bottom: 20px; right: 20px)
+├── .floating-btn (botón circular 64px)
+└── .chat-window (oculto inicialmente)
+    ├── .chat-header (título + botón cerrar)
+    ├── .messages-container (área de mensajes)
+    ├── .status (indicador de estado)
+    └── .input-container (input + enviar + reset)
+```
+
+## Eventos del Widget
+
+| Evento | Descripción |
+|--------|-------------|
+| Click en 🍎 | Abre la ventana de chat |
+| Click en ✕ | Cierra la ventana de chat |
+| Click fuera | Cierra la ventana de chat |
+| Arrastrar esquina | Redimensiona la ventana |
+| Click en 🔄 | Reinicia la conversación |
