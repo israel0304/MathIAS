@@ -170,8 +170,8 @@ class MathIAs extends HTMLElement {
 
   _handleClickOutside(e) {
     if (this._isOpen &&
-        !this._chatWindow.contains(e.target) &&
-        !this._floatingBtn.contains(e.target)) {
+      !this._chatWindow.contains(e.target) &&
+      !this._floatingBtn.contains(e.target)) {
       this._toggleChat();
     }
   }
@@ -296,10 +296,14 @@ class MathIAs extends HTMLElement {
       `;
 
       const bubbleText = div.querySelector('.bubble-text');
-      bubbleText.innerHTML = text
-        .replace(/\\\\/g, '\\')
-        .replace(/\n/g, '<br>')
-        .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+      if (text.startsWith('...')) {
+        bubbleText.innerHTML = '<span class="thinking-dots"><span></span><span></span><span></span><span></span><span></span></span>';
+      } else {
+        bubbleText.innerHTML = text
+          .replace(/\\\\/g, '\\')
+          .replace(/\n/g, '<br>')
+          .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+      }
     }
 
     return div;
@@ -429,7 +433,7 @@ class MathIAs extends HTMLElement {
     this._setState('thinking');
 
     // Mostrar mensaje de "pensando"
-    const thinkingMsg = this._createMessageElement('mathias', 'Hmm, déjame pensar en eso...');
+    const thinkingMsg = this._createMessageElement('mathias', '......');
     this._messagesContainer.appendChild(thinkingMsg);
     this._messagesContainer.scrollTop = this._messagesContainer.scrollHeight;
 
@@ -517,9 +521,10 @@ class MathIAs extends HTMLElement {
     this._setState(accion || 'idle');
 
     // Eliminar mensaje de "pensando" y agregar respuesta real
-    const thinkingMsg = this._messagesContainer.querySelectorAll('.message:last-child');
-    if (thinkingMsg.length > 0 && thinkingMsg[0].querySelector('.bubble-text').textContent.includes('déjame pensar')) {
-      thinkingMsg[0].remove();
+    const messages = this._messagesContainer.querySelectorAll('.message');
+    const lastMsg = messages[messages.length - 1];
+    if (lastMsg && lastMsg.querySelector('.thinking-dots')) {
+      lastMsg.remove();
     }
 
     this._addMessage('mathias', respuesta);
@@ -542,7 +547,7 @@ class MathIAs extends HTMLElement {
     const messages = this._messagesContainer.querySelectorAll('.message');
     if (messages.length > 0) {
       const lastMsg = messages[messages.length - 1];
-      if (lastMsg.querySelector('.bubble-text').textContent.includes('déjame pensar')) {
+      if (lastMsg.querySelector('.thinking-dots')) {
         lastMsg.remove();
       }
     }
