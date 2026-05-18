@@ -96,6 +96,11 @@ class MathIAs extends HTMLElement {
     this._startY = 0;
     this._startWidth = 0;
     this._startHeight = 0;
+    this._isDragging = false;
+    this._dragStartX = 0;
+    this._dragStartY = 0;
+    this._dragInitialLeft = 0;
+    this._dragInitialTop = 0;
   }
 
   connectedCallback() {
@@ -119,8 +124,11 @@ class MathIAs extends HTMLElement {
     // Inicializar posición en esquina inferior derecha si no hay datos guardados
     if (!localStorage.getItem('mathias_left')) {
       const defaultWidth = 450;
+      const defaultHeight = 550;
       const rightMargin = 20;
+      const bottomMargin = 100;
       this._chatWindow.style.left = (window.innerWidth - rightMargin - defaultWidth) + 'px';
+      this._chatWindow.style.top = (window.innerHeight - bottomMargin - defaultHeight) + 'px';
     }
 
     // Event listeners
@@ -144,12 +152,20 @@ class MathIAs extends HTMLElement {
     this._resizeHandle.addEventListener('mousedown', (e) => this._startResize(e));
     document.addEventListener('mousemove', this._boundDoResize);
     document.addEventListener('mouseup', this._boundStopResize);
+
+    // Event listeners para arrastrar desde el header
+    this._chatHeader = this.querySelector('.chat-header');
+    this._boundDoDrag = (e) => this._doDrag(e);
+    this._boundStopDrag = () => this._stopDrag();
+    this._chatHeader.addEventListener('mousedown', (e) => this._startDrag(e));
   }
 
   disconnectedCallback() {
     document.removeEventListener('click', this._handleClickOutside);
     if (this._boundDoResize) document.removeEventListener('mousemove', this._boundDoResize);
     if (this._boundStopResize) document.removeEventListener('mouseup', this._boundStopResize);
+    if (this._boundDoDrag) document.removeEventListener('mousemove', this._boundDoDrag);
+    if (this._boundStopDrag) document.removeEventListener('mouseup', this._boundStopDrag);
     if (this._resizeObserver) {
       this._resizeObserver.disconnect();
     }
@@ -216,17 +232,22 @@ class MathIAs extends HTMLElement {
     localStorage.setItem('mathias_width', width);
     localStorage.setItem('mathias_height', height);
     localStorage.setItem('mathias_left', this._chatWindow.style.left);
+    localStorage.setItem('mathias_top', this._chatWindow.style.top);
   }
 
   _loadSavedSize() {
     const savedWidth = localStorage.getItem('mathias_width');
     const savedHeight = localStorage.getItem('mathias_height');
     const savedLeft = localStorage.getItem('mathias_left');
+    const savedTop = localStorage.getItem('mathias_top');
     if (savedWidth && savedHeight) {
       this._chatWindow.style.width = savedWidth + 'px';
       this._chatWindow.style.height = savedHeight + 'px';
       if (savedLeft) {
         this._chatWindow.style.left = savedLeft;
+      }
+      if (savedTop) {
+        this._chatWindow.style.top = savedTop;
       }
     }
   }
@@ -238,6 +259,8 @@ class MathIAs extends HTMLElement {
     this._startY = e.clientY;
     this._startWidth = this._chatWindow.offsetWidth;
     this._startHeight = this._chatWindow.offsetHeight;
+    this._startLeft = this._chatWindow.offsetLeft;
+    this._startTop = this._chatWindow.offsetTop;
     document.body.style.cursor = 'se-resize';
     document.body.style.userSelect = 'none';
   }
@@ -245,7 +268,7 @@ class MathIAs extends HTMLElement {
   _doResize(e) {
     if (!this._isResizing) return;
 
-    const delta = this._startX - e.clientX;
+    const delta = e.clientX - this._startX;
     const newWidth = this._startWidth + delta;
     const newHeight = this._startHeight + (e.clientY - this._startY);
 
@@ -253,11 +276,9 @@ class MathIAs extends HTMLElement {
     const minHeight = 450;
     const maxWidth = 700;
     const maxHeight = 650;
-    const rightMargin = 20;
 
     if (newWidth >= minWidth && newWidth <= maxWidth) {
       this._chatWindow.style.width = newWidth + 'px';
-      this._chatWindow.style.left = (window.innerWidth - rightMargin - newWidth) + 'px';
     }
     if (newHeight >= minHeight && newHeight <= maxHeight) {
       this._chatWindow.style.height = newHeight + 'px';
@@ -273,6 +294,46 @@ class MathIAs extends HTMLElement {
     const width = this._chatWindow.offsetWidth;
     const height = this._chatWindow.offsetHeight;
     this._saveSize(width, height);
+  }
+
+  _startDrag(e) {
+    if (e.target === this._closeBtn || this._closeBtn.contains(e.target)) return;
+    
+    this._isDragging = true;
+    this._dragStartX = e.clientX;
+    this._dragStartY = e.clientY;
+    this._dragInitialLeft = this._chatWindow.offsetLeft;
+    this._dragInitialTop = this._chatWindow.offsetTop;
+    document.body.style.userSelect = 'none';
+
+    document.addEventListener('mousemove', this._boundDoDrag);
+    document.addEventListener('mouseup', this._boundStopDrag);
+  }
+
+  _doDrag(e) {
+    if (!this._isDragging) return;
+
+    const deltaX = e.clientX - this._dragStartX;
+    const deltaY = e.clientY - this._dragStartY;
+
+    this._chatWindow.style.left = (this._dragInitialLeft + deltaX) + 'px';
+    this._chatWindow.style.top = (this._dragInitialTop + deltaY) + 'px';
+  }
+
+  _stopDrag() {
+    if (!this._isDragging) return;
+    this._isDragging = false;
+    document.body.style.userSelect = '';
+
+    document.removeEventListener('mousemove', this._boundDoDrag);
+    document.removeEventListener('mouseup', this._boundStopDrag);
+
+    this._savePosition();
+  }
+
+  _savePosition() {
+    localStorage.setItem('mathias_left', this._chatWindow.style.left);
+    localStorage.setItem('mathias_top', this._chatWindow.style.top);
   }
 
   _saveMessages() {
