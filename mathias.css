@@ -41,7 +41,7 @@
 .chat-window {
   position: fixed;
   bottom: 100px;
-  right: 20px;
+  left: 20px;
   width: 450px;
   height: 550px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -51,8 +51,9 @@
   flex-direction: column;
   overflow: hidden;
 
-  /* Redimensionable */
-  resize: both;
+  /* Redimensionable personalizado - esquina inferior izquierda */
+  resize: none;
+  overflow: hidden;
   min-width: 350px;
   min-height: 450px;
   max-width: 700px;
@@ -62,6 +63,37 @@
 .chat-window.open {
   display: flex;
   animation: fadeInScale 0.3s ease;
+}
+
+/* Handle de redimensionamiento - esquina inferior izquierda */
+.resize-handle {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  cursor: nw-resize;
+  z-index: 10;
+}
+
+.resize-handle::before {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  width: 14px;
+  height: 14px;
+  background: 
+    linear-gradient(135deg, transparent 4px, rgba(255,255,255,0.5) 4px, rgba(255,255,255,0.5) 5px, transparent 5px),
+    linear-gradient(135deg, transparent 8px, rgba(255,255,255,0.5) 8px, rgba(255,255,255,0.5) 9px, transparent 9px),
+    linear-gradient(135deg, transparent 12px, rgba(255,255,255,0.5) 12px, rgba(255,255,255,0.5) 13px, transparent 13px);
+}
+
+.resize-handle:hover::before {
+  background: 
+    linear-gradient(135deg, transparent 4px, rgba(255,255,255,0.8) 4px, rgba(255,255,255,0.8) 5px, transparent 5px),
+    linear-gradient(135deg, transparent 8px, rgba(255,255,255,0.8) 8px, rgba(255,255,255,0.8) 9px, transparent 9px),
+    linear-gradient(135deg, transparent 12px, rgba(255,255,255,0.8) 12px, rgba(255,255,255,0.8) 13px, transparent 13px);
 }
 
 @keyframes fadeInScale {
@@ -168,7 +200,7 @@
   line-height: 1.5;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  color: #333;
+  /* color: #333; */
   overflow-x: hidden;
   max-width: 100%;
 }

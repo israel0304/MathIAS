@@ -48,7 +48,7 @@ app.post('/api/chat', async (req, res) => {
     }
 
     const contextPrompt = SYSTEM_PROMPT.replace('{historial}', historial || 'Sin historial previo');
-    
+
     const messages = [
       { role: 'system', content: contextPrompt },
       { role: 'user', content: mensaje }
@@ -62,8 +62,8 @@ app.post('/api/chat', async (req, res) => {
       {
         model: OLLAMA_MODEL,
         messages: messages,
-        temperature: 0.7,
-        max_tokens: 500
+        temperature: 0.8,
+        max_tokens: 1500
       },
       {
         timeout: 60000,
@@ -75,7 +75,7 @@ app.post('/api/chat', async (req, res) => {
     );
 
     let respuestaTexto = ollamaResponse.data.choices?.[0]?.message?.content || '';
-    
+
     respuestaTexto = respuestaTexto
       .replace(/\\\\/g, '\\')
       .replace(/\*\*(.+?)\*\*/g, '$1')
