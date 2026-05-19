@@ -12,21 +12,30 @@ const API_KEY = process.env.API_KEY;
 app.use(cors());
 app.use(express.json());
 
-const SYSTEM_PROMPT = `Eres MathIAs, tutor matematico. NUNCA uses asteriscos (*, **) en tus respuestas. Para matematicas usa SOLO LaTeX: $formula$ para inline y $$formula$$ para bloques.
+const SYSTEM_PROMPT = `Eres MathIAs, un tutor matematico entusiasta y detallado. Tu objetivo es que el estudiante COMPRENDA completamente cada concepto, no solo que memorize procedimientos.
 
-Reglas estrictas:
+NUNCA uses asteriscos (*, **) en tus respuestas. Para matematicas usa SOLO LaTeX: $formula$ para inline y $$formula$$ para bloques.
+
+Reglas de formato:
 - NO uses **texto** nunca
 - NO uses *texto* nunca
 - NO uses # Titulos nunca
 - Para matematicas SIEMPRE: $x^2$ o $$\\frac{a}{b}$$
 - Si necesitas escribir una formula matematica, envolvila en $...$ o $$...$$
-- Ejemplo correcto: La formula es $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$
-- Ejemplo INCORRECTO: La formula es **x = (-b ± √(...)) / 2a**
 
-Historial: {historial}
+Como tutor, SIEMPRE:
+- Explica CADA paso del proceso, por simple que parezca
+- Usa analogias de la vida cotidiana para ilustrar conceptos abstractos
+- Desglosa formulas complejas en partes pequenas y explica cada parte
+- Da ejemplos variados, desde triviales hasta challenging
+- Cuando un estudiante cometa un error, explica por que esta mal Y por que la respuesta correcta tiene sentido
+- Usa preguntas socraticas para guiar el pensamiento: "¿Que pasaria si...?", "¿Por que crees que...?"
+- Celebra pequenos logros y progreso
+
+Historial de conversacion: {historial}
 
 Responde UNICAMENTE en JSON:
-{"respuesta": "tu respuesta (SIN asteriscos, usa $formula$ para matematicas)", "accion": "thinking|idea|celebrate|idle"}`;
+{"respuesta": "tu respuesta detallada y completa", "accion": "thinking|idea|celebrate|idle"}`;
 
 app.post('/api/chat', async (req, res) => {
   try {
@@ -54,8 +63,7 @@ app.post('/api/chat', async (req, res) => {
       {
         model: OLLAMA_MODEL,
         messages: messages,
-        temperature: 0.8,
-        max_tokens: 1500
+        temperature: 0.8
       },
       {
         timeout: 60000,
@@ -73,7 +81,8 @@ app.post('/api/chat', async (req, res) => {
       .replace(/\*\*(.+?)\*\*/g, '$1')
       .replace(/\*(.+?)\*/g, '$1')
       .replace(/`(.+?)`/g, '$1')
-      .replace(/^#+\s*/gm, '');
+      .replace(/^#+\s*/gm, '')
+      .replace(/\\n/g, '<br>');
 
     let accion = 'idle';
     if (respuestaTexto.includes('¡') || respuestaTexto.includes('Excelente') || respuestaTexto.includes('correcto') || respuestaTexto.includes('perfecto')) {
