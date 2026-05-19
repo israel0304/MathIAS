@@ -23,14 +23,6 @@ Reglas estrictas:
 - Ejemplo correcto: La formula es $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$
 - Ejemplo INCORRECTO: La formula es **x = (-b ± √(...)) / 2a**
 
-Respuesta correcta para ecuaciones de segundo grado:
-$$x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$$
-
-Donde:
-- $a$ = coeficiente de $x^2$
-- $b$ = coeficiente de $x$  
-- $c$ = termino independiente
-
 Historial: {historial}
 
 Responde UNICAMENTE en JSON:

@@ -18,8 +18,11 @@ npm run dev        # Iniciar servidor con hot reload (nodemon)
 - Config en `.env`: `OLLAMA_URL`, `OLLAMA_MODEL`, `API_KEY`
 
 ## Key Implementation Notes
-- **Widget Flotante**: Posición fixed bottom-right, redimensionable (min 350x450, max 700x650)
-- **Persistencia**: localStorage (`mathias_messages`, `mathias_width`, `mathias_height`)
+- **Widget Flotante**: Posición fixed bottom-right, redimensionable y arrastrable
+  - Tamaño: min 350x450px, max 700x650px, default 450x550px
+  - Arrastrable: click y arrastra desde el header
+  - Redimensionable: arrastrar esquina inferior derecha
+- **Persistencia**: localStorage (`mathias_messages`, `mathias_width`, `mathias_height`, `mathias_left`, `mathias_top`)
 - **No Shadow DOM**: CSS global en `mathias.css`
 - **KaTeX**: Renderizado con `output: 'html'` (no MathML)
 - **Reutilizable**: `<mathias-asistente webhook-url="..."></mathias-asistente>`

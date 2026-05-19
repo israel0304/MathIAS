@@ -201,12 +201,9 @@
   line-height: 1.5;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  /* color: #333; */
   overflow-x: hidden;
   max-width: 100%;
 }
-
-/* No ocultar elementos de KaTeX con aria-hidden, dejar que KaTeX maneje eso */
 
 .message .bubble-text .katex-mathml {
   display: inline !important;

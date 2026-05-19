@@ -140,9 +140,6 @@ class MathIAs extends HTMLElement {
       if (e.key === 'Enter') this._handleSend();
     });
 
-    // Click fuera para cerrar
-    document.addEventListener('click', (e) => this._handleClickOutside(e));
-
     // Resize observer para guardar tamaño
     this._setupResizeObserver();
 
@@ -161,7 +158,6 @@ class MathIAs extends HTMLElement {
   }
 
   disconnectedCallback() {
-    document.removeEventListener('click', this._handleClickOutside);
     if (this._boundDoResize) document.removeEventListener('mousemove', this._boundDoResize);
     if (this._boundStopResize) document.removeEventListener('mouseup', this._boundStopResize);
     if (this._boundDoDrag) document.removeEventListener('mousemove', this._boundDoDrag);
@@ -206,14 +202,6 @@ class MathIAs extends HTMLElement {
     } else {
       this._chatWindow.classList.remove('open');
       this._floatingBtn.classList.remove('open');
-    }
-  }
-
-  _handleClickOutside(e) {
-    if (this._isOpen &&
-      !this._chatWindow.contains(e.target) &&
-      !this._floatingBtn.contains(e.target)) {
-      this._toggleChat();
     }
   }
 
